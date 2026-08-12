@@ -207,13 +207,26 @@ postgresql:
     username: postgres
     database: nebraska
     postgresPassword: changeIt
+  # The official PostgreSQL image is used instead of a Bitnami one: the
+  # `bitnamilegacy/*` repositories are a frozen archive that is never rebuilt,
+  # so images pulled from them accumulate unpatched CVEs. The subchart drives
+  # the official image through POSTGRES_USER/POSTGRES_PASSWORD/POSTGRES_DB and
+  # PGDATA, which docker.io/postgres honours as well.
+  # Note: `auth.username` values other than "postgres" become the superuser of
+  # the official image, and `auth.postgresPassword` is then unused.
   image:
     registry: docker.io
-    repository: bitnamilegacy/postgresql
-    tag: 17.5.0
+    repository: postgres
+    tag: 17.10-trixie
+  # The official image has no /bitnami tree, so the data directory moves under
+  # /var/lib/postgresql. It must be a subdirectory the container user creates
+  # itself: /var/lib/postgresql and /var/lib/postgresql/data ship as 1777 in
+  # the image and PostgreSQL rejects a data directory with those permissions.
+  postgresqlDataDir: /var/lib/postgresql/pgdata
   primary:
     persistence:
       enabled: false
+      mountPath: /var/lib/postgresql
       storageClass:
       accessModes:
         - ReadWriteOnce
