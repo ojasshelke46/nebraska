@@ -123,6 +123,13 @@ procedure above, with two additions:
   the official image, and `postgresql.auth.postgresPassword` is then unused. Set
   the password of the user Nebraska connects with through `postgresql.auth.password`.
 
+If your values file already overrides `postgresql.image.registry`,
+`postgresql.image.repository`, `postgresql.image.tag`,
+`postgresql.postgresqlDataDir`, or `postgresql.primary.persistence.mountPath`
+from a previous install, update those overrides to the values above. An old
+override will keep pointing at the bitnami image and paths, and the steps in
+this section will not apply.
+
 ## Parameters
 
 ### Global parameters
